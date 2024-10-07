@@ -12,93 +12,128 @@ public class BiodataTemanV2 extends JFrame {
         this.checkBoxSelected = false;
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        // Menggunakan GridBagLayout
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);  // Margin antar elemen
+
+        // Label Form Biodata (di atas, di tengah)
         JLabel labelInput2 = new JLabel("Form Biodata", JLabel.CENTER);
-        labelInput2.setBounds(15,10,150,30);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 4;  // Label ini melebar ke 4 kolom
+        gbc.anchor = GridBagConstraints.CENTER;
+        this.add(labelInput2, gbc);
 
-        JLabel labelInput = new JLabel("Input Nama:");
-        labelInput.setBounds(15,40,150,30);
+        // Reset pengaturan gridwidth untuk elemen selanjutnya
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.WEST;
 
-        JTextField textField = new JTextField();
-        textField.setBounds(15,70,150,30);
+        // Label Nama (Kolom Kiri)
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        JLabel labelInput = new JLabel("Nama:");
+        this.add(labelInput, gbc);
 
-        JLabel labelInput1 = new JLabel("Nomor HP:");
-        labelInput1.setBounds(15,100,150,30);
+        // TextField Nama (Kolom Kiri)
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        JTextField textField = new JTextField(15);
+        this.add(textField, gbc);
 
-        JTextField textField1 = new JTextField();
-        textField1.setBounds(15,130,150,30);
-
+        // Label Jenis Kelamin (Kolom Kanan)
+        gbc.gridx = 2;
+        gbc.gridy = 1;
         JLabel labelRadio = new JLabel("Jenis Kelamin:");
-        labelRadio.setBounds(170,40,150,30);
+        this.add(labelRadio, gbc);
 
+        // RadioButton Laki-Laki (Kolom Kanan)
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
         JRadioButton radioButton1 = new JRadioButton("Laki-laki", true);
-        radioButton1.setBounds(170,70,150,30);
+        this.add(radioButton1, gbc);
 
-        JRadioButton radioButton2 = new JRadioButton("Perempuan", true);
-        radioButton2.setBounds(170,100,150,30);
+        // Label Nomor HP (Kolom Kiri)
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        JLabel labelInput1 = new JLabel("Nomor HP:");
+        this.add(labelInput1, gbc);
+
+        // TextField Nomor HP (Kolom Kiri)
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        JTextField textField1 = new JTextField(15);
+        this.add(textField1, gbc);
+
+        // RadioButton Perempuan (Kolom Kanan)
+        gbc.gridx = 2;
+        gbc.gridy = 3;
+        JRadioButton radioButton2 = new JRadioButton("Perempuan");
+        this.add(radioButton2, gbc);
 
         ButtonGroup bg = new ButtonGroup();
         bg.add(radioButton1);
         bg.add(radioButton2);
 
+        // Checkbox Warga Negara Asing (Kolom Kanan)
+        gbc.gridx = 2;
+        gbc.gridy = 4;
         JCheckBox checkBox = new JCheckBox("Warga Negara Asing");
-        checkBox.setBounds(170,130,150,30);
+        this.add(checkBox, gbc);
 
+        // Tombol Simpan
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 4;
+        gbc.anchor = GridBagConstraints.CENTER;
         JButton button = new JButton("Simpan");
-        button.setBounds(15,170,150,40);
+        this.add(button, gbc);
 
-        JTextArea txtOutput = new JTextArea("");
-        txtOutput.setBounds(15,220,300,200);
+        // TextArea untuk Output
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.gridwidth = 4;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        JTextArea txtOutput = new JTextArea(10, 30);
+        txtOutput.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(txtOutput);
+        this.add(scrollPane, gbc);
 
+        // ActionListener untuk Checkbox
         checkBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                checkBoxSelected = e.getStateChange()==1;
+                checkBoxSelected = e.getStateChange() == 1;
             }
         });
 
+        // ActionListener untuk Tombol Simpan
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String jenisKelamin = "";
-                String wna = "";
-                if (checkBoxSelected) {
-                    wna = "Ya";
-                } else {
-                    wna = "Bukan";
-                }
-                
-                if (radioButton1.isSelected()){
-                    jenisKelamin = radioButton1.getText();
-                }
-                if (radioButton2.isSelected()){
-                    jenisKelamin = radioButton2.getText();
-                }
+                String jenisKelamin = radioButton1.isSelected() ? "Laki-laki" : "Perempuan";
+                String wna = checkBoxSelected ? "Ya" : "Bukan";
 
                 String nama = textField.getText();
                 String telepon = textField1.getText();
-                txtOutput.append("Nama:     " + nama + "\n");
-                txtOutput.append("Nomor HP:    " + telepon + "\n");
-                txtOutput.append("Jenis Kelamin:    " + jenisKelamin + "\n");
-                txtOutput.append("WNA:     " + wna + "\n");
-                txtOutput.append("======================================================================");
+
+                txtOutput.append("Nama: " + nama + "\n");
+                txtOutput.append("Nomor HP: " + telepon + "\n");
+                txtOutput.append("Jenis Kelamin: " + jenisKelamin + "\n");
+                txtOutput.append("WNA: " + wna + "\n");
+                txtOutput.append("========================================\n");
+
+                // Reset input setelah klik simpan
                 textField.setText("");
+                textField1.setText("");
             }
         });
 
-        this.add(button);
-        this.add(textField);
-        this.add(textField1);
-        this.add(labelRadio);
-        this.add(radioButton1);
-        this.add(radioButton2);
-        this.add(checkBox);
-        this.add(labelInput);
-        this.add(labelInput1);
-        this.add(labelInput2);
-        this.add(txtOutput);
-
-        this.setSize(500,500);
-        this.setLayout(null);
+        this.setSize(600, 400);
+        this.setLocationRelativeTo(null); // Agar jendela berada di tengah layar
     }
 
     public static void main(String[] args) {
